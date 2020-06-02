@@ -1,0 +1,79 @@
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+/**
+ * Write a description of class Tester here.
+ * 
+ * @author GivenName FamilyName
+ * @version 1.0 yyyy-mm-dd
+ */
+public class Tester
+{
+    public static void editErrorsInFile() throws IOException
+    {
+        // Establish filename constants.
+        final String INPUT_FILE = "2016-12-21_Welcome_to_Macintosh_combined.text";
+        final int LENGTH_OF_MISPLACED_LINE = 7;
+        final String MISPLACED_LINE = "Block A";
+        final String OUTPUT_FILE = "editedScores.text";
+
+        // Establish connections to the text files.
+        BufferedReader inputFile = new BufferedReader(new FileReader(INPUT_FILE));
+        PrintWriter outputFile = new PrintWriter(new FileWriter(OUTPUT_FILE));
+
+        /* Read from the first file and echo to the second. */
+
+        String lineOfText = inputFile.readLine();
+
+        while (lineOfText != null)
+        {
+            if (lineOfText.indexOf(MISPLACED_LINE) != -1 
+            && lineOfText.indexOf(MISPLACED_LINE) > LENGTH_OF_MISPLACED_LINE - 1)
+            {
+                outputFile.println(lineOfText.substring(0, lineOfText.indexOf(MISPLACED_LINE)));
+                outputFile.println(MISPLACED_LINE);
+            } 
+            else 
+            {
+                outputFile.println(lineOfText);
+            }// end of if (lineOfText.indexOf(MISPLACED_LINE) != -1 && lineOfText.indexOf ...
+            lineOfText = inputFile.readLine();
+        } // while(lineOfText != null)
+
+        // Wrap up.
+        inputFile.close();
+        outputFile.close();
+
+    } // end of method editErrorsInFile()
+
+    public static void tester() throws IOException
+    {
+        // Establish filename constants.
+        final String INPUT_FILE = "2016-12-21_Welcome_to_Macintosh_combined.text";
+        final int LENGTH_OF_MISPLACED_LINE = 7;
+        final String MISPLACED_LINE = "Block A";
+        final String OUTPUT_FILE = "editedScores.text";
+        final String TAB = "    ";
+        String [] scores;
+
+        // Establish connections to the text files.
+        BufferedReader inputFile = new BufferedReader(new FileReader(INPUT_FILE));
+        PrintWriter outputFile = new PrintWriter(new FileWriter(OUTPUT_FILE));
+        String lineOFext = inputFile.readLine();
+        scores = lineOFext.split(TAB);
+        System.out.println(lineOFext);
+        System.out.println(lineOFext.indexOf("    "));
+    }
+    public static void testerORiginal()
+    {
+        final String TAB = "    ";
+        String line = "ICS3U7-01 Pod 1    10    20    30    41";
+        String [] scores;
+        scores = line.split(TAB);
+        String score = scores[0];
+        System.out.println(score);
+    }
+
+} // end of class Tester

@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.params=argument
+comment0.target=void\ main(java.lang.String[])
+comment0.text=\r\n\ Calculates\ and\ shows\ each\ videos\ ratings.\ \r\n
+comment1.params=
+comment1.target=void\ editErrorsInFile()
+comment1.text=\r\n\ Fixes\ the\ errors\ in\ the\ text\ file.\r\n
+comment2.params=
+comment2.target=void\ getScores()
+comment2.text=\r\n\ Gathers\ and\ calculates\ scores\ for\ each\ video.\r\n
+numComments=3

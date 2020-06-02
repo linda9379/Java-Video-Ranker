@@ -1,0 +1,181 @@
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Write a description of class VideoScore here.
+ * 
+ * @author Linda Jiang
+ * @version 1.0 2017-01-04
+ */
+public class VideoScore
+{
+    // public constants and variables
+    public static final int NUMBER_OF_VIDEOS = 13;
+    public static final String TAB = "\t";
+    public static Video[] macintoshVideo = new Video [NUMBER_OF_VIDEOS];
+    public static int currentVideo;
+
+    /**
+     * Calculates and shows each videos ratings. 
+     */
+    public static void main (String[] argument) throws IOException
+    {
+        final int VIDEO_NAME_COLUMN = 0;
+        final String CLASS1 ="Block A";
+        final String CLASS2 ="Block B";
+        final String CLASS3 ="Block C";
+        final String CLASS4 ="Block D";
+        final String TEXT_FILE = "editedScores.text";
+        //         String line
+        int numberOfVideoTitlesStored = 0; 
+        String[] lineOfScores;
+
+        // editErrorsInFile();
+        // instatiate an array of video objects
+        for(currentVideo = 0; currentVideo < NUMBER_OF_VIDEOS; currentVideo ++)
+        {
+            macintoshVideo[currentVideo] = new Video();
+        } // end of for (int i = 0; i < NUMBER_OF_VIDEOS; i ++)
+
+        // Establish a connection to the text file.
+        BufferedReader inputFile = new BufferedReader(new FileReader(TEXT_FILE));
+        // Read title of video from the text file 
+        String lineOfText = inputFile.readLine();
+        lineOfScores = lineOfText.split(TAB); 
+
+        while (numberOfVideoTitlesStored < NUMBER_OF_VIDEOS && lineOfText != null)
+        {   
+            // Does the line contain video scores?
+            if (!lineOfText.equals(CLASS1) && !lineOfText.equals(CLASS2) 
+            && !lineOfText.equals(CLASS3) && !lineOfText.equals(CLASS4))
+            {
+                macintoshVideo[numberOfVideoTitlesStored].setTitle(lineOfScores[VIDEO_NAME_COLUMN]);
+                numberOfVideoTitlesStored = numberOfVideoTitlesStored + 1;               
+            } // end of if (!lineOfText.equals(CLASS1) && !lineOfText.equals(CLASS2) 
+            lineOfText = inputFile.readLine();
+            lineOfScores = lineOfText.split(TAB); 
+        } // end of while (numberOfVideoTitlesStored < NUMBER_OF_VIDEOS && lineOfText != null)
+        inputFile.close();
+        getScores();
+
+        // Print out results
+        System.out.println("Total Scores");
+        for(currentVideo = 0; currentVideo < NUMBER_OF_VIDEOS; currentVideo ++)
+        {
+            System.out.println(macintoshVideo[currentVideo].getTitle()
+                + TAB + macintoshVideo[currentVideo].getContentScore() + TAB + macintoshVideo[currentVideo].getLayoutAndDesignScore()
+                + TAB + macintoshVideo[currentVideo].getTechnicalElementsScore() + TAB + macintoshVideo[currentVideo].getCreativityScore() 
+                + TAB + (macintoshVideo[currentVideo].getContentScore() + macintoshVideo[currentVideo].getLayoutAndDesignScore() + macintoshVideo[currentVideo].getTechnicalElementsScore() + macintoshVideo[currentVideo].getCreativityScore()));
+        } // end of for (int i = 0; i < NUMBER_OF_VIDEOS; i ++)
+    } // end of method main (String[] argument) 
+
+    /**
+     * Fixes the errors in the text file.
+     */
+    public static void editErrorsInFile() throws IOException
+    {
+        final String EMPTY_STRING = "";
+        final String INPUT_FILE = "2016-12-21_Welcome_to_Macintosh_combined.text";
+        final int LENGTH_OF_MISPLACED_LINE = 7;
+        final String MISPLACED_LINE = "Block A";
+        final String OUTPUT_FILE = "editedScores.text";
+        final char SPACE = ' ';
+        final String SPACES_AS_TABS = "   ";
+        int numberOfSpaces;
+        // Establish connections to the text files
+        BufferedReader inputFile = new BufferedReader(new FileReader(INPUT_FILE));
+        PrintWriter outputFile = new PrintWriter(new FileWriter(OUTPUT_FILE));
+
+        // Read from the first file and echo to the second
+        String lineOfText = inputFile.readLine();
+
+        while (lineOfText != null)
+        {
+            // Fix spaces that were supposed to be tabs
+            lineOfText = lineOfText.replaceAll(SPACES_AS_TABS, TAB);
+            numberOfSpaces = 1;
+
+            if (!lineOfText.equals(EMPTY_STRING))
+            {
+                // Fix end of line markers
+                while (lineOfText.charAt(lineOfText.length() - numberOfSpaces) == SPACE)
+                {
+                    lineOfText = lineOfText.substring(0, lineOfText.length() - numberOfSpaces);
+                    numberOfSpaces = numberOfSpaces + 1;
+                } // end of while (lineOfText.charAt(lineOfText.length() - numberOfSpaces) == SPACE)
+            } // end of if (!lineOfText.equals(EMPTY_STRING))
+
+            // Move the misplaced line to the next line 
+            if (lineOfText.indexOf(MISPLACED_LINE) != -1 
+            && lineOfText.indexOf(MISPLACED_LINE) > LENGTH_OF_MISPLACED_LINE - 1)
+            {
+                outputFile.println(lineOfText.substring(0, lineOfText.indexOf(MISPLACED_LINE)));
+                outputFile.println(MISPLACED_LINE);
+            } 
+            else 
+            {
+                outputFile.println(lineOfText);
+            }// end of if (lineOfText.indexOf(MISPLACED_LINE) != -1 && lineOfText.indexOf ...
+            lineOfText = inputFile.readLine();
+        } // while(lineOfText != null)
+
+        // Wrap up
+        inputFile.close();
+        outputFile.close();
+
+    } // end of method editErrorsInFile()
+    
+    /**
+     * Gathers and calculates scores for each video.
+     */
+    public static void getScores() throws IOException
+    {
+        final int CONTENT_SCORE_COLUMN = 1;
+        final int CREATIVITY_SCORE_COLUMN = 4;
+        final int LAYOUT_AND_DESIGN_SCORE_COLUMN = 2;
+        final int TECHNICAL_ELEMENTS_SCORE_COLUMN = 3; 
+        final int VIDEO_NAME_COLUMN = 0;
+        final String TEXT_FILE = "editedScores.text";
+        String[] lineOfScores;
+        boolean videoFound = false;
+
+        // Establish a connection to the text file.
+        BufferedReader inputFile = new BufferedReader(new FileReader(TEXT_FILE));
+        String lineOfText = inputFile.readLine();
+        lineOfScores = lineOfText.split(TAB);
+
+        while (lineOfText != null)
+        {
+            currentVideo = 0;
+            do
+            {   
+                // Is it the right video?
+                if (lineOfScores[VIDEO_NAME_COLUMN].equals(macintoshVideo[currentVideo].getTitle()))
+                {
+                    // Store video scores in this video object
+                    macintoshVideo[currentVideo].setContentScore(Integer.parseInt(lineOfScores[CONTENT_SCORE_COLUMN]));
+                    macintoshVideo[currentVideo].setCreativityScore(Integer.parseInt(lineOfScores[CREATIVITY_SCORE_COLUMN]));
+                    macintoshVideo[currentVideo].setLayoutAndDesignScore(Integer.parseInt(lineOfScores[LAYOUT_AND_DESIGN_SCORE_COLUMN]));
+                    macintoshVideo[currentVideo].setTechnicalElementsScore(Integer.parseInt(lineOfScores[TECHNICAL_ELEMENTS_SCORE_COLUMN]));
+                    videoFound = !videoFound;
+                }
+                currentVideo = currentVideo + 1;
+            }
+            while(currentVideo < NUMBER_OF_VIDEOS && !videoFound);
+            // Reset boolean expression
+            videoFound = false;
+            // Read the next line
+            lineOfText = inputFile.readLine();
+            // Is it the end of the file?
+            if (lineOfText != null)
+            {
+                lineOfScores = lineOfText.split(TAB);
+            } // end of if (lineOfText != null)
+        } // while(lineOfText != null)
+        // Wrap up.
+        inputFile.close();
+    } // end of method getScores()
+} // end of class VideoScore
